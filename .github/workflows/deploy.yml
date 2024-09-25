@@ -24,27 +24,28 @@ jobs:
       ACR_PW: ${{ secrets.ACR_PW  }}
       DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE.
+      # Checkout the repository.
       - uses: actions/checkout@v3
 
+      # Ensure all scripts have execution permission.
+      - name: Make all scripts executable
+        run: chmod +x ./scripts/*.sh
+        
       #
       # Builds the Docker image.
       #
-      - name: Build
+      - name: Build Docker image
         run: ./scripts/build-image.sh
 
       #
       # Publishes the Docker image to the container registry.
       #
-      - name: Publish
+      - name: Push Docker image
         run: ./scripts/push-image.sh
 
       #
-      # Installs Kubectl and connects it to the cluster.
-      #
-      # https://github.com/marketplace/actions/kubernetes-cli-kubectl
+      # Installs kubectl and connects it to the cluster using KUBE_CONFIG secret.
       #
       - uses: tale/kubectl-action@v1
         with:
@@ -52,7 +53,7 @@ jobs:
           kubectl-version: v1.31.0
 
       #
-      # Expands the configuration template and deploys the microservice.
+      # Deploy the microservice using kubectl.
       #
-      - name: Deploy
+      - name: Deploy to AKS
         run: ./scripts/deploy.sh
