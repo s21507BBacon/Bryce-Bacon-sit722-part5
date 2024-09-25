@@ -22,7 +22,8 @@ jobs:
       ACR_NAME: ${{ secrets.ACR_NAME }}
       ACR_UN: ${{ secrets.ACR_UN }}
       ACR_PW: ${{ secrets.ACR_PW  }}
-      DATABASE_URL: ${ {secrets.DATABASE_URL }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
 
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE.
